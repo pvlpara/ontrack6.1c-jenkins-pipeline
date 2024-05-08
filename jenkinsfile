@@ -62,5 +62,10 @@ pipeline {
                 echo 'using docker to deploy to server'
             }
         }
+        stage('Complete') {
+            steps {
+                echo 'all stages complete'
+            }
+        }
     }
 }
