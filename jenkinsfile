@@ -1,0 +1,66 @@
+pipeline {
+    agent any
+    environment{
+        ERRORS="0"
+        SCAN="COMPLETED"
+    }
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the code using maven...'
+                echo 'mvn clean package'
+            }
+        }
+        stage('Unit and Integration Tests') {
+            steps {
+                echo 'Running unit and integration tests...'
+                echo 'using maven to test..'
+                echo 'mvn test'
+            }
+        }
+        stage('Code Analysis') {
+            steps {
+                echo 'Analyzing code using SonarQube ...'
+                echo 'mvn sonar:sonar'
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                echo 'Running security scan using OWASP Dependency-Check and maven...'
+                echo 'mvn org.owasp:dependency-check-maven:check'
+            }
+            post{
+                success{
+                    mail to:"pvlpara@gmail.com",
+                    subject: "Security scan",
+                    body:"Security scan $SCAN"
+                }
+           }
+        }
+        stage('Deploy to Staging') {
+            steps {
+                echo 'Deploying to staging using docker...'
+                echo 'docker-compose -f docker-compose-staging.yml up -d'
+            }
+        }
+        stage('Integration Tests on Staging') {
+            steps {
+                echo 'Running integration tests on staging...'
+                echo 'Running the integration tests in the Postman collection using Newman'
+            }
+            post{
+                success{
+                    mail to:"pvlpara@gmail.com",
+                    subject: "Testing on staging",
+                    body:"Test completed with $ERRORS errors"
+                }
+           }
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo 'Deploying to a production server - AWS EC2...'
+                echo 'using docker to deploy to server'
+            }
+        }
+    }
+}
