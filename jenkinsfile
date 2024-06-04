@@ -32,7 +32,7 @@ pipeline {
             post{
                 always{
                     mail to:"pvlpara@gmail.com",
-                    emailext attachLog: true,
+                    emailext attachLog:true,
                     subject: "Security scan",
                     body:"Test completed, ${currentBuild.currentResult}:"
                 }
