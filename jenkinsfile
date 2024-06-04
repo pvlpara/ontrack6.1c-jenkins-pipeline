@@ -30,10 +30,11 @@ pipeline {
                 echo 'mvn org.owasp:dependency-check-maven:check'
             }
             post{
-                success{
+                always{
                     mail to:"pvlpara@gmail.com",
+                    emailext attachLog: true,
                     subject: "Security scan",
-                    body:"Security scan $SCAN"
+                    body:"Test completed, ${currentBuild.currentResult}:"
                 }
            }
         }
