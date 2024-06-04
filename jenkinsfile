@@ -55,6 +55,7 @@ pipeline {
                 success{
                     mail to:"pvlpara@gmail.com",
                     subject: "Testing on staging",
+                    attachLog:true,
                     body:"Test completed with $ERRORS errors"
                 }
            }
